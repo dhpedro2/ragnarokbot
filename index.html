@@ -10,8 +10,8 @@
     <form id="formNome">
         <label for="nome">Nome:</label>
         <select id="nome" name="nome">
-            <option value="Felipe">João</option>
-            <option value="Sweet">Maria</option>
+            <option value="Felipe">Felipe</option>
+            <option value="Caio">Caio</option>
             <option value="Pedro">Pedro</option>
         </select>
         <br>
@@ -27,14 +27,14 @@
     <script>
         // Configurações do Firebase
         var firebaseConfig = {
-              apiKey: "AIzaSyBbSlF8mV-N-NG8IzGBTcwUrAV3QfwSh0k",
-              authDomain: "raga-df841.firebaseapp.com",
-              projectId: "raga-df841",
-              storageBucket: "raga-df841.appspot.com",
-              messagingSenderId: "822434274243",
-              appId: "1:822434274243:web:349f2172db5a4289b37b76",
-              measurementId: "G-YK6MH2TJHS"
-            };
+            apiKey: 'AIzaSyBbSlF8mV-N-NG8IzGBTcwUrAV3QfwSh0k',
+            authDomain: 'raga-df841.firebaseapp.com',
+            projectId: 'raga-df841',
+            databaseURL: 'https://raga-df841-default-rtdb.firebaseio.com/',
+            storageBucket: 'raga-df841.appspot.com',
+            messagingSenderId: '822434274243',
+            appId: '1:822434274243:web:349f2172db5a4289b37b76'
+        };
 
         // Inicializa o app do Firebase
         firebase.initializeApp(firebaseConfig);
