@@ -40,55 +40,65 @@
             appId: '1:822434274243:web:349f2172db5a4289b37b76'
         };
 
-        // Inicializa o app do Firebase
-        firebase.initializeApp(firebaseConfig);
+    // Inicializa o app do Firebase
+    firebase.initializeApp(firebaseConfig);
 
-        // Obtém uma referência para o Realtime Database do Firebase
-        var database = firebase.database();
+    // Obtém uma referência para o Realtime Database do Firebase
+    var database = firebase.database();
 
-        // Evento de envio do formulário
-        document.getElementById('formNome').addEventListener('submit', function(event) {
-            event.preventDefault(); // Impede o envio do formulário padrão
+    // Evento de envio do formulário
+    document.getElementById('formNome').addEventListener('submit', function(event) {
+        event.preventDefault(); // Impede o envio do formulário padrão
 
-            var nome = document.getElementById('nome').value;
-            var numero = document.getElementById('numero').value;
-            var id = document.getElementById('id').value;
+        var nome = document.getElementById('nome').value;
+        var numero = document.getElementById('numero').value;
 
-            // Verifica se o nome já existe no banco de dados
-            database.ref('nomes').orderByChild('nome').equalTo(nome).once('value', function(snapshot) {
-                if (snapshot.exists()) {
-                    // Atualiza o número e o ID associados ao nome existente
-                    snapshot.forEach(function(childSnapshot) {
-                        var key = childSnapshot.key;
-                        database.ref('nomes/' + key).update({ numero: numero, id: id });
-                    });
-                } else {
-                    // Salva um novo registro no banco de dados
-                    database.ref('nomes').push({ nome: nome, numero: numero, id: id });
-                }
-            });
-
-            // Limpa os campos do formulário após o envio
-            document.getElementById('numero').value = '';
-            document.getElementById('id').value = '';
+        // Verifica se o nome já existe no banco de dados
+        database.ref('nomes').orderByChild('nome').equalTo(nome).once('value', function(snapshot) {
+            if (snapshot.exists()) {
+                // Atualiza o número associado ao nome existente
+                snapshot.forEach(function(childSnapshot) {
+                    var key = childSnapshot.key;
+                    database.ref('nomes/' + key).update({ numero: numero });
+                });
+            } else {
+                // Salva um novo registro no banco de dados
+                database.ref('nomes').push({ nome: nome, numero: numero });
+            }
         });
 
-        // Monitora as alterações no Realtime Database e atualiza a lista
-        database.ref('nomes').on('value', function(snapshot) {
-            var dadosList = document.getElementById('dadosList');
-            dadosList.innerHTML = '';
+        // Limpa os campos do formulário após o envio
+        document.getElementById('numero').value = '';
+    });
 
-            snapshot.forEach(function(childSnapshot) {
-                var nome = childSnapshot.val().nome;
-                var numero = childSnapshot.val().numero;
-                var id = childSnapshot.val().id;
+    // Monitora as alterações no Realtime Database e atualiza a tabela
+    database.ref('nomes').on('value', function(snapshot) {
+        var dadosTable = document.getElementById('dadosTable');
+        dadosTable.innerHTML = '';
 
-                var listItem = document.createElement('li');
-                listItem.innerText = nome + ' - ' + numero + ' - ' + id;
+        var headerRow = document.createElement('tr');
+        var headerNome = document.createElement('th');
+        headerNome.innerText = 'Nome';
+        var headerNumero = document.createElement('th');
+        headerNumero.innerText = 'Level';
+        headerRow.appendChild(headerNome);
+        headerRow.appendChild(headerNumero);
+        dadosTable.appendChild(headerRow);
 
-                dadosList.appendChild(listItem);
-            });
+        snapshot.forEach(function(childSnapshot) {
+            var nome = childSnapshot.val().nome;
+            var numero = childSnapshot.val().numero;
+
+            var dataRow = document.createElement('tr');
+            var dataNome = document.createElement('td');
+            dataNome.innerText = nome;
+            var dataNumero = document.createElement('td');
+            dataNumero.innerText = numero;
+            dataRow.appendChild(dataNome);
+            dataRow.appendChild(dataNumero);
+            dadosTable.appendChild(dataRow);
         });
-    </script>
+    });
+</script>
 </body>
 </html>
