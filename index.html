@@ -49,18 +49,22 @@
             var nome = document.getElementById('nome').value;
             var numero = document.getElementById('numero').value;
 
-            // Salva os dados no Realtime Database do Firebase
-            database.ref('nomes').push({
-                nome: nome,
-                numero: numero
-            }, function(error) {
-                if (error) {
-                    alert('Ocorreu um erro ao salvar os dados.');
+            // Verifica se o nome já existe no banco de dados
+            database.ref('nomes').orderByChild('nome').equalTo(nome).once('value', function(snapshot) {
+                if (snapshot.exists()) {
+                    // Atualiza o número associado ao nome existente
+                    snapshot.forEach(function(childSnapshot) {
+                        var key = childSnapshot.key;
+                        database.ref('nomes/' + key).update({ numero: numero });
+                    });
                 } else {
-                    alert('Dados enviados com sucesso!');
-                    document.getElementById('numero').value = ''; // Limpa o campo de número após o envio
+                    // Salva um novo registro no banco de dados
+                    database.ref('nomes').push({ nome: nome, numero: numero });
                 }
             });
+
+            // Limpa os campos do formulário após o envio
+            document.getElementById('numero').value = '';
         });
 
         // Monitora as alterações no Realtime Database e atualiza a lista
