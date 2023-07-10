@@ -50,15 +50,15 @@
     </table>
 
     <script>
-// Configurações do Firebase
+        // Configurações do Firebase
         var firebaseConfig = {
-            apiKey: 'AIzaSyBbSlF8mV-N-NG8IzGBTcwUrAV3QfwSh0k',
-            authDomain: 'raga-df841.firebaseapp.com',
-            projectId: 'raga-df841',
-            databaseURL: 'https://raga-df841-default-rtdb.firebaseio.com/',
-            storageBucket: 'raga-df841.appspot.com',
-            messagingSenderId: '822434274243',
-            appId: '1:822434274243:web:349f2172db5a4289b37b76'
+            apiKey: 'sua_api_key',
+            authDomain: 'seu_auth_domain',
+            projectId: 'seu_project_id',
+            databaseURL: 'sua_database_url',
+            storageBucket: 'seu_storage_bucket',
+            messagingSenderId: 'seu_sender_id',
+            appId: 'seu_app_id'
         };
 
         // Inicializa o app do Firebase
@@ -74,8 +74,19 @@
             var nome = document.getElementById('nome').value;
             var numero = document.getElementById('numero').value;
 
-            // Salva um novo registro no banco de dados
-            database.ref('nomes').push({ nome: nome, numero: numero });
+            // Verifica se o nome já existe no banco de dados
+            database.ref('nomes').orderByChild('nome').equalTo(nome).once('value', function(snapshot) {
+                if (snapshot.exists()) {
+                    // Atualiza o número associado ao nome existente
+                    snapshot.forEach(function(childSnapshot) {
+                        var key = childSnapshot.key;
+                        database.ref('nomes/' + key).update({ numero: numero });
+                    });
+                } else {
+                    // Salva um novo registro no banco de dados
+                    database.ref('nomes').push({ nome: nome, numero: numero });
+                }
+            });
 
             // Limpa os campos do formulário após o envio
             document.getElementById('numero').value = '';
