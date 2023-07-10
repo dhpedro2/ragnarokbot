@@ -75,7 +75,6 @@
 
             var nome = document.getElementById('nome').value;
             var numero = document.getElementById('numero').value;
-            var id = document.getElementById('id').value;
 
             // Verifica se o nome já existe no banco de dados
             database.ref('nomes').orderByChild('nome').equalTo(nome).once('value', function(snapshot) {
