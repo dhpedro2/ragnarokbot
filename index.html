@@ -33,7 +33,6 @@
         <br>
         <label for="numero">Level:</label>
         <input type="text" id="numero" name="numero">
-        <input type="hidden" id="id" name="id"> <!-- Adicionado campo oculto para armazenar o ID -->
         <br>
         <input type="submit" value="Enviar">
     </form>
@@ -45,7 +44,6 @@
                 <th>Nome</th>
                 <th>Level</th>
                 <th>ID</th>
-                <th>Ações</th> <!-- Adicionado cabeçalho para as ações de edição e exclusão -->
             </tr>
         </thead>
         <tbody id="dadosList"></tbody>
@@ -75,25 +73,12 @@
 
             var nome = document.getElementById('nome').value;
             var numero = document.getElementById('numero').value;
-            var id = document.getElementById('id').value;
 
-            // Verifica se o nome já existe no banco de dados
-            database.ref('nomes').orderByChild('nome').equalTo(nome).once('value', function(snapshot) {
-                if (snapshot.exists()) {
-                    // Atualiza o número associado ao nome existente
-                    snapshot.forEach(function(childSnapshot) {
-                        var key = childSnapshot.key;
-                        database.ref('nomes/' + key).update({ numero: numero });
-                    });
-                } else {
-                    // Salva um novo registro no banco de dados
-                    database.ref('nomes').push({ nome: nome, numero: numero });
-                }
-            });
+            // Salva um novo registro no banco de dados
+            database.ref('nomes').push({ nome: nome, numero: numero });
 
             // Limpa os campos do formulário após o envio
             document.getElementById('numero').value = '';
-            document.getElementById('id').value = '';
         });
 
         // Monitora as alterações no Realtime Database e atualiza a tabela
@@ -110,19 +95,9 @@
                 var cell1 = row.insertCell(0);
                 var cell2 = row.insertCell(1);
                 var cell3 = row.insertCell(2);
-                var cell4 = row.insertCell(3);
-
                 cell1.innerHTML = nome;
                 cell2.innerHTML = numero;
                 cell3.innerHTML = id;
-                cell4.innerHTML = '<button onclick="editRecord(\'' + id + '\', \'' + nome + '\', \'' + numero + '\')">Editar</button>'; // Botão de edição
-
-                // Função para preencher o formulário com os dados do registro selecionado
-                function editRecord(recordId, recordNome, recordNumero) {
-                    document.getElementById('id').value = recordId;
-                    document.getElementById('nome').value = recordNome;
-                    document.getElementById('numero').value = recordNumero;
-                }
             });
         });
     </script>
