@@ -4,18 +4,6 @@
     <title>Site</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        th, td {
-            text-align: left;
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-        }
-    </style>
 </head>
 <body>
     <h1>Bagulho de level</h1>
@@ -31,25 +19,14 @@
             <option value="Lohanna Armani">Lohanna Armani</option>
         </select>
         <br>
-<label for="numero">Level:</label>
-<input type="text" id="numero" name="numero">
-
-<br>
-<input type="submit" value="Enviar">
-
+        <label for="numero">Level:</label>
+        <input type="text" id="numero" name="numero">
+        <br>
+        <input type="submit" value="Enviar">
     </form>
 
     <h2>Dados Salvos:</h2>
-    <table id="dadosTable">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Level</th>
-                <th>ID</th>
-            </tr>
-        </thead>
-        <tbody id="dadosList"></tbody>
-    </table>
+    <ul id="dadosList"></ul>
 
     <script>
 // Configurações do Firebase
@@ -75,6 +52,7 @@
 
             var nome = document.getElementById('nome').value;
             var numero = document.getElementById('numero').value;
+            var id = document.getElementById('id').value;
 
             // Verifica se o nome já existe no banco de dados
             database.ref('nomes').orderByChild('nome').equalTo(nome).once('value', function(snapshot) {
@@ -95,7 +73,7 @@
             document.getElementById('id').value = '';
         });
 
-        // Monitora as alterações no Realtime Database e atualiza a tabela
+        // Monitora as alterações no Realtime Database e atualiza a lista
         database.ref('nomes').on('value', function(snapshot) {
             var dadosList = document.getElementById('dadosList');
             dadosList.innerHTML = '';
@@ -105,13 +83,10 @@
                 var numero = childSnapshot.val().numero;
                 var id = childSnapshot.val().id;
 
-                var row = dadosList.insertRow();
-                var cell1 = row.insertCell(0);
-                var cell2 = row.insertCell(1);
-                var cell3 = row.insertCell(2);
-                cell1.innerHTML = nome;
-                cell2.innerHTML = numero;
-                cell3.innerHTML = id;
+                var listItem = document.createElement('li');
+                listItem.innerText = nome + ' - ' + numero + ' - ' + id;
+
+                dadosList.appendChild(listItem);
             });
         });
     </script>
