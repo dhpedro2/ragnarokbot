@@ -100,7 +100,7 @@
             snapshot.forEach(function(childSnapshot) {
                 var nome = childSnapshot.val().nome;
                 var numero = childSnapshot.val().numero;
-                var id = childSnapshot.key;
+                var id = childSnapshot.val().id;
 
                 var row = dadosList.insertRow();
                 var cell1 = row.insertCell(0);
